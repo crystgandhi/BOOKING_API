@@ -1,17 +1,15 @@
-import { test, expect } from '../fixtures/api.fixture';
+import { test, expect } from '../../fixtures/api.fixture';
+import { getTestData } from '../../utils/readingDataUtils';
 
-import createBookingPayload from '../test-data/createBookingPayload.json';
-import updateBookingPayload from '../test-data/updateBookingPayload.json';
-import partialUpdatePayload from '../test-data/partialUpdatePayload.json';
-
-
+const createPayload = getTestData('createBookingPayload');
+const updatePayload = getTestData('updateBookingPayload');
+const partialUpdatePayload = getTestData('partialUpdatePayload');
 
 test.describe('Booking API Tests', () => {
   let bookingId: number;
-  //services
+
   test.beforeAll(async ({ bookingService }) => {
-    //create resource Booking
-    const response = await bookingService.createBooking(createBookingPayload);
+    const response = await bookingService.createBooking(createPayload);
     expect(response.status()).toBe(200);
     const responseBody = await response.json();
     bookingId = responseBody.bookingid;
@@ -25,14 +23,14 @@ test.describe('Booking API Tests', () => {
   });
 
  test('Update Booking', async ({ bookingService, token }) => {
- const response = await bookingService.updateBooking(bookingId, updateBookingPayload, token);
+ const response = await bookingService.updateBooking(bookingId, updatePayload, token);
 console.log('response type:', typeof response);
 console.log('response:', response);         // see what object this is
 console.log('has json?', typeof response?.json);
   expect(response.status()).toBe(200);
   const responseBody = await response.json();
   // Assert all fields, not just one
-  expect(responseBody).toMatchObject(updateBookingPayload);
+  expect(responseBody).toMatchObject(updatePayload);
 });
 
   test('Partial Update Booking', async ({ bookingService, token }) => {
